@@ -2,6 +2,7 @@ package com.TheSoulStudio.printing_backend.controller;
 
 import com.TheSoulStudio.printing_backend.DTO.EnquiryRequest;
 import com.TheSoulStudio.printing_backend.entity.Enquiry;
+import com.TheSoulStudio.printing_backend.entity.EnquiryStatus;
 import com.TheSoulStudio.printing_backend.entity.Product;
 import com.TheSoulStudio.printing_backend.repository.EnquiryRepository;
 import com.TheSoulStudio.printing_backend.repository.ProductRepository;
@@ -32,6 +33,7 @@ public class EnquiryController {
         e.setEmail(request.getEmail());
         e.setMessage(request.getMessage());
         e.setProduct(product);
+        e.setStatus(EnquiryStatus.NEW);
 
         return enquiryRepo.save(e);
 

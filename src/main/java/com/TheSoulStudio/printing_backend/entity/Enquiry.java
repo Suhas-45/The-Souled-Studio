@@ -25,4 +25,7 @@ public class Enquiry {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Enumerated(EnumType.STRING)
+    private EnquiryStatus status;
+
 }
