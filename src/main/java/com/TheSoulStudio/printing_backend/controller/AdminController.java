@@ -1,12 +1,16 @@
 package com.TheSoulStudio.printing_backend.controller;
 
 import com.TheSoulStudio.printing_backend.DTO.AdminRequest;
+import com.TheSoulStudio.printing_backend.DTO.ProductRequest;
+import com.TheSoulStudio.printing_backend.DTO.ProductResponse;
 import com.TheSoulStudio.printing_backend.config.JwtUtil;
 import com.TheSoulStudio.printing_backend.entity.*;
 import com.TheSoulStudio.printing_backend.repository.AdminRepository;
 import com.TheSoulStudio.printing_backend.repository.CategoryRepository;
 import com.TheSoulStudio.printing_backend.repository.EnquiryRepository;
 import com.TheSoulStudio.printing_backend.repository.ProductRepository;
+import com.TheSoulStudio.printing_backend.sevice.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,44 +25,31 @@ public class AdminController {
     private final ProductRepository productRepo;
     private final EnquiryRepository enquiryRepo;
     private final JwtUtil jwtUtil;
-    private final CategoryRepository categoryRepo;
     private final PasswordEncoder passwordEncoder;
+    private final ProductService productService;
 
-    public AdminController(AdminRepository adminRepo, ProductRepository productRepo, EnquiryRepository enquiryRepo, JwtUtil jwtUtil, CategoryRepository categoryRepo, PasswordEncoder passwordEncoder) {
+    public AdminController(AdminRepository adminRepo, ProductRepository productRepo, EnquiryRepository enquiryRepo, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, ProductService productService) {
         this.adminRepo = adminRepo;
         this.productRepo = productRepo;
         this.enquiryRepo = enquiryRepo;
         this.jwtUtil = jwtUtil;
-        this.categoryRepo = categoryRepo;
         this.passwordEncoder = passwordEncoder;
+        this.productService = productService;
     }
 
     @PostMapping("/products")
-    public Product createProduct(@RequestBody Product p){
-        Category category = categoryRepo.findById(
-                p.getCategory().getId()
-        ).orElseThrow(() -> new RuntimeException("Category Not found"));
-
-        p.setCategory(category);
-        return productRepo.save(p);
-
+    public ProductResponse createProduct( @Valid @RequestBody ProductRequest request){
+        return productService.createProduct(request);
     }
 
     @PutMapping("/products/{id}")
-    public Product updateProduct(@RequestParam Long id,@RequestBody Product p){
-        Product existing = productRepo.findById(id).orElseThrow();
-        existing.setName(p.getName());
-        existing.setDescription(p.getDescription());
-        existing.setImageUrl(p.getImageUrl());
-        existing.setPrice(p.getPrice());
-        existing.setCategory(p.getCategory());
-        return productRepo.save(existing);
-
+    public ProductResponse updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest request){
+        return productService.updateProduct(id, request);
     }
 
     @DeleteMapping("products/{id}")
-    public void deleteProduct(@RequestParam Long id){
-        productRepo.deleteById(id);
+    public void deleteProduct(@PathVariable Long id){
+        productService.deleteProduct(id);
     }
 
 

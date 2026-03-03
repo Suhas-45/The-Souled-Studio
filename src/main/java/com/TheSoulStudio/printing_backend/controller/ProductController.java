@@ -1,29 +1,24 @@
 package com.TheSoulStudio.printing_backend.controller;
 
-import com.TheSoulStudio.printing_backend.DTO.ProductRequest;
-import com.TheSoulStudio.printing_backend.entity.Product;
-import com.TheSoulStudio.printing_backend.repository.ProductRepository;
+import com.TheSoulStudio.printing_backend.DTO.ProductResponse;
 import com.TheSoulStudio.printing_backend.sevice.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductRepository repo;
+
     private final ProductService service;
 
-    public ProductController(ProductRepository repo, ProductService service) {
-        this.repo = repo;
+    public ProductController( ProductService service) {
         this.service = service;
     }
 
     @GetMapping
-    public Page<ProductRequest> list(
+    public Page<ProductResponse> list(
             @RequestParam(defaultValue = "0")int page,
             @RequestParam(defaultValue = "10") int size
     ){
@@ -33,12 +28,12 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductRequest getById(@PathVariable Long id){
+    public ProductResponse getById(@PathVariable Long id){
         return service.getProduct(id);
     }
 
     @GetMapping("/search")
-    public Page<ProductRequest> search(
+    public Page<ProductResponse> search(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0")int page,
             @RequestParam(defaultValue = "10") int size
@@ -47,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/category/{id}")
-    public Page<ProductRequest> byCategory(
+    public Page<ProductResponse> byCategory(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
