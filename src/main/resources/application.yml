@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
 
 server:
-  port: 8086
+  port: 8082
 
 jwt:
   secret: 7X8MZk4R3B2xwZ1ZbN+Z9E0JXrYwP6bqg3eT4nKp1F0=

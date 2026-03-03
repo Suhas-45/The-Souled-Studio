@@ -10,7 +10,9 @@ import com.TheSoulStudio.printing_backend.repository.ProductRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -83,5 +85,16 @@ public class AdminController {
                 .orElseThrow( () -> new RuntimeException("Enquiry not found"));
         enquiry.setStatus(status);
         return enquiryRepo.save(enquiry);
+    }
+
+    @GetMapping("/dashboard")
+    public Map<String,Long> dashboard(){
+        Map<String, Long> data = new HashMap<>();
+
+        data.put("Total", enquiryRepo.count());
+        data.put("New",enquiryRepo.countByStatus(EnquiryStatus.NEW));
+        data.put("Contacted",enquiryRepo.countByStatus(EnquiryStatus.CONTACTED));
+        data.put("Closed",enquiryRepo.countByStatus(EnquiryStatus.CLOSE));
+        return data;
     }
 }
